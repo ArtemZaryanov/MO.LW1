@@ -5,10 +5,13 @@
 #include <math.h>
 #include <functional>
 
+double Function(const double x)
+{
+    return (x - 2) * (x - 2);
+}
 void Sven(double& a, double& b, const double t)
 {
     double x0 = (a + b) / 2;
-    double x1 = 0'
     double f0 = Function(x0 - t);
     double f = Function(x0 - t);
     double f1 = Function(x0 + t);
@@ -21,16 +24,59 @@ void Sven(double& a, double& b, const double t)
             b = x0 + t;
             return;
         }
-        //Собственно сам поиск
+
+        double delta = 0;
+        double x1 = 0;
         if ((f <= f0) && (f >= f1))
         {
             a = x0;
             x1 = x0 + t;
+            delta = t;
         }
-        if ((f >=f0) && (f <=f1))
+        if ((f >= f0) && (f <= f1))
         {
             x1 = x0 - t;
             b = x0;
+            delta = -t;
+
+        }
+        //Собственно сам поиск
+        int buf = 0;
+        int k = 1;
+        while (true)
+        {
+            buf = x0 + pow(2, k) * delta;
+            x0 = x1;
+            x1 = buf;
+            if (Function(x1) < Function(x0))
+            {
+                //Могут быть ошибки точности ы
+                if (delta == t)
+                {
+                    a = x0;
+                }
+                else
+                {
+                    b = x0;
+                }
+
+            }
+            //условие останова
+            else
+            {
+                //Могут быть ошибки точности ы
+                if (delta == t)
+                {
+                    b = x1;
+                }
+                else
+                {
+                    a = x1;
+                }
+            }
+            k = k + 1;
+            
+
         }
     }
     else
@@ -50,16 +96,17 @@ void Fibonacci()
 {
     ;
 }
-double Function(const double x)
-{
-    return x * x;
-}
 int main()
 {
-    const double a = 0;
-    const double b = 10;
-    const double t = (b - a) / 100;
     std::cout << "Hello World!\n";
+    double a = 0;
+    double b = 10;
+    const double t = (b - a) / 100;
+    Sven(a, b, t);
+    std::cout << "Sven..." << std::endl;
+    std::cout << "Search interval : " << a << ", " << b << std::endl;
+    
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
