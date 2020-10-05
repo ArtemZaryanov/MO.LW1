@@ -3,13 +3,13 @@
 
 #include <iostream>
 #include <functional>
-
+#include <vector>
 double Function(const double x);
 void Sven(double& a, double& b, const double t);
 double Dichotomy(const double a, const double b, const double e);
 double GoldSection(const double a, const double b, const double e);
-double Fibonacci(const double a, const double b, const double e);
-
+double FibonacciMethod(const double a, const double b, const double e);
+std::vector<double> FibonacciNumberList(const int N);
 int main()
 {
     std::cout << "Hello World!\n";
@@ -27,7 +27,11 @@ int main()
     std::cout << "GoldSection" << std::endl;;
     x = GoldSection(a, b, e);
     std::cout << "GoldSection::Minimum x=" << x << " f(x)=" << Function(x) << std::endl;
+    std::cout << "FibonacciMethod" << std::endl;;
+    x = FibonacciMethod(a, b, e);
+    std::cout << "FibonacciMethod::Minimum x=" << x << " f(x)=" << Function(x) << std::endl;
     //TODO Проверить функию. По идее она должна быть быстрее в смысле числа итераций
+
 }
 
 double Function(const double x)
@@ -206,7 +210,57 @@ double GoldSection(const double a, const double b, const double e)
     return (ak + bk) / 2;
 
 }
-double Fibonacci(const double a, const double b, const double e)
+double FibonacciMethod(const double a, const double b, const double e)
 {
-    ;
+    double iter = 1;
+    double ak = a;
+    double bk = b;
+    //Вычисления количества чисел Фибоначи
+    std::vector<double> F{ 0,1, 1};
+    int N = 0;
+    while (F.back() <= (b - a) / e)
+    {
+        F.push_back(F[N + 2] + F[N + 1]);
+        N++;
+        iter++;
+    }
+    int k = 0;
+    double yk = ak + (F[N] / F[N + 2]) * (bk - ak);
+    double fyk = Function(yk);
+    double zk = ak + (F[N + 1] / F[N + 2]) * (bk - ak);
+    double fzk = Function(zk);
+    while (k < N - 1)
+    {
+        if (fyk <= fzk)
+        {
+            ak = ak;
+            bk = zk;
+            yk = ak + (F[N - k] / F[N - k + 2]) * (bk - ak);
+            zk = yk;
+        }
+        else
+        {
+            ak = yk;
+            bk = bk;
+            yk = zk;
+            zk = ak + (F[N - k + 1] / F[N - k + 2]) * (bk - ak);
+        }
+
+        k++;
+        iter++;
+    }
+    std::cout << "iter=" << iter<< std::endl;
+    return (ak + bk) / 2;
+      
+}
+
+std::vector<double> FibonacciNumberList(const int N)
+{
+    std::vector<double> F{ 0,1, 0 };
+    for (size_t k = 2; k <= N + 2; k++)
+    {
+        F[k] = F[k - 1] + F[k - 2];
+        F.push_back(F[k]);
+    }
+    return F;
 }
