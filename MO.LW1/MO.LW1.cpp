@@ -31,6 +31,7 @@ int main()
     x = FibonacciMethod(a, b, e);
     std::cout << "FibonacciMethod::Minimum x=" << x << " f(x)=" << Function(x) << std::endl;
     //TODO Проверить функию. По идее она должна быть быстрее в смысле числа итераций
+    //Каждый метод скорее всего должен быть быстрее предыдушего 
 
 }
 
@@ -235,8 +236,8 @@ double FibonacciMethod(const double a, const double b, const double e)
         {
             ak = ak;
             bk = zk;
-            yk = ak + (F[N - k] / F[N - k + 2]) * (bk - ak);
             zk = yk;
+            yk = ak + (F[N - k] / F[N - k + 2]) * (bk - ak);
         }
         else
         {
@@ -245,7 +246,8 @@ double FibonacciMethod(const double a, const double b, const double e)
             yk = zk;
             zk = ak + (F[N - k + 1] / F[N - k + 2]) * (bk - ak);
         }
-
+        fzk = Function(zk);
+        fyk = Function(yk);
         k++;
         iter++;
     }
